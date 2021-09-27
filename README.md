@@ -49,7 +49,85 @@ This system aims to help the patients who are confused about the disease they ha
 
 ## Implementation
 
+### Dataset
+The dataset that will be used for this project is a publicly available dataset that was found on Kaggle, a Machine Learning and Data Science Community platform. It is created by Pranay Patil and Pratik Rathod. The dataset can be found in the [Dataset](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/tree/main/Dataset) folder of this respository. It is a very new dataset as it was uploaded in 2019 and updated in 2020. The usability of this dataset is rated very high by Kaggle (9.7/10). There are four csv files in the Dataset folder:
 
+- [Symptom.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom.csv): This is the most important csv file, where the symptoms and their corresponding disease has been mentioned. The dataset consists of 17 columns of symptoms and 1 column for Disease name. The symptom columns (named as Symptom_1 to Symptom_17) has a lot of null values in their cells, indicating to the fact that a disease can have less than 17 symptoms.
+- [Symptom Description.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom%20Description.csv): This csv file contains the description of every unique disease that has been mentioned in the Symptom.csv file. Although the name of the file is Symptom description, it does not have any description of any of the symptom.
+- [Symptom Severity.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom%20Severity.csv): This csv file contains the level of severity of the symptoms that are present in Symptom.csv. The highest (indicating to most critical severity) symptom has been given 7 and the lease (indicating to least critical severity) has been given 1.
+- [Symptom Precaution.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom%20Precaution.csv): This csv file contains 4 columns of simple precautions that can be taken to avoid contracting the list of unique diseases present in Symptom.csv.
+
+### Visualizing the data
+
+Before we get a visualization on the data, we need to read it using pandas library
+```python
+import pandas as pd
+df1 = pd.read_csv('Symptom.csv')
+df2 = pd.read_csv('Symptom Description.csv')
+df3 = pd.read_csv('Symptom Precaution.csv')
+df4 = pd.read_csv('Symptom Severity.csv')
+```
+Once read, we can use Python visualization libraries such as Matplotlib and Seaborn
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+sns.set()
+```
+ 
+```python
+vis1 = plt.hist(df4["weight"], color=sns.color_palette()[8])
+plt.xlabel("Count")
+plt.ylabel("Severity")
+```
+
+### Data Preprocessing
+
+```python
+combined_df = pd.merge(df1, df2, on = 'Disease')
+combined_df = pd.merge(combined_df , df3, on = 'Disease')
+x = combined_df[['Symptom_1', 'Symptom_2', 'Symptom_3','Symptom_4','Symptom_5']]
+le = LabelEncoder()
+for i in x.columns:
+    x[i] = le.fit_transform(x[i].astype(str))
+y = combined_df['Disease']
+```
+
+### ML Model
+
+```python
+x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2,random_state=10)
+lr = LogisticRegression(solver="newton-cg",max_iter=3000)
+lrmodel = lr.fit(x_train, y_train)
+lracc = lr.score(x_test, y_test)
+print(round(lracc*100, 3), "%", sep="")
+```
+
+```python
+x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=10)
+svmmodel = svm.SVC(kernel="linear", C=2)
+svmmodel.fit(x_train, y_train)
+y_pred = svmmodel.predict(x_test)
+svmacc = metrics.accuracy_score(y_test, y_pred)
+print(round(svmacc*100, 3), "%", sep="")
+```
+
+```python
+trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.2, random_state = 42)
+classifier = KNeighborsClassifier(n_neighbors=1)
+classifier.fit(trainX, trainY)
+y_pred = classifier.predict(testX)
+knnacc = classifier.score(testX, testY)
+print(round(knnacc*100, 3),"%", sep="")
+```
+
+```python
+x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=9)
+rf = RandomForestClassifier(n_estimators=100)
+rf.fit(x_train, y_train)
+pred = rf.predict(x_test)
+print(round(rf.score(x_test,y_test) * 100, 3),"%",sep="")
+```
 
 ## References
 - [_Baclic, O., Tunis, M., Young, K., Doan, C., Swerdfeger, H., & Schonfeld, J. (2020). Artificial intelligence in public health: Challenges and opportunities for public health made possible by advances in natural language processing. Canada Communicable Disease Report, 46(6), 161._](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/References/Challenges%20and%20opportunities%20for%20public%20health.pdf)
