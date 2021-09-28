@@ -226,7 +226,7 @@ plt.ylabel("Severity")
 ```
 <p align="left">
   <a>
-    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Severity%20histogram.png" width="350" height="250">
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Severity-count%20histogram.png" width="350" height="250">
   </a>
 </p>
 From this figure, we infer that most of the symptoms mentioned in this datset has severity levels 4 and 5
@@ -245,11 +245,21 @@ plt.title("Symptom 12")
 </p>
 
 ### Data Preprocessing
+1. From the above head of df1 dataframe, we observe that a lot of Null values are present in the dataset. Therefore we count the total number of NaN values in the dataset.
+```python
+df1.isna().count()
+```
 
+2. Due to the large number of null values from Sypmtom_6 onwards, we will not be using the columns from Symptom_6 onwards in our Machine Learning model. We also combine the other csv files into a single dataframe.
 ```python
 combined_df = pd.merge(df1, df2, on = 'Disease')
 combined_df = pd.merge(combined_df , df3, on = 'Disease')
 x = combined_df[['Symptom_1', 'Symptom_2', 'Symptom_3','Symptom_4','Symptom_5']]
+```
+
+3. For the machine to understand the column contents, we need to perform label encoding on these columns. We use scikitlearn's Label Encoder function for that. 
+```python
+from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 for i in x.columns:
     x[i] = le.fit_transform(x[i].astype(str))
@@ -258,6 +268,7 @@ y = combined_df['Disease']
 
 ### ML Model
 
+1. 
 ```python
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2,random_state=10)
 lr = LogisticRegression(solver="newton-cg",max_iter=3000)
