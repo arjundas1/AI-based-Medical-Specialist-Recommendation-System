@@ -267,34 +267,50 @@ y = combined_df['Disease']
 ```
 
 ### ML Model
-
-1. 
+In order to find out the suitable machine learning algorithm, we have implemented several algorithms to determine the one yielding highest prediction accuracy. The conditions for train-test split has also been varied according to our understanding of effiency yield. However, every model uses 20% data as testing set.
+```python
+from sklearn.model_selection import train_test_split
+```
+#### Logistic Regression
+Although the name has regression in it, Logistic regression is a classification algorithm. We identified the most efficient solver for our dataset to be newton-cg. Since covergence passes at 3000 iterations, the algorithm is slow with not a high prediction accuracy score.
 ```python
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2,random_state=10)
+from sklearn.linear_model import LogisticRegression
 lr = LogisticRegression(solver="newton-cg",max_iter=3000)
 lrmodel = lr.fit(x_train, y_train)
 lracc = lr.score(x_test, y_test)
 print(round(lracc*100, 3), "%", sep="")
 ```
+We do not wish to choose Logistic Regression as the preferred ML Algortihm for our model
 
+#### Support Vector Machine
+SVM gives a very high prediction accuracy when implemented. However, this algorithm is very slow. This is possibly because of the eager learning construct of this algorithm, or that finding a suitable hyperplane is time consuming.
 ```python
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=10)
+from sklearn import svm, metrics
 svmmodel = svm.SVC(kernel="linear", C=2)
 svmmodel.fit(x_train, y_train)
 y_pred = svmmodel.predict(x_test)
 svmacc = metrics.accuracy_score(y_test, y_pred)
 print(round(svmacc*100, 3), "%", sep="")
 ```
+We do not wish to implement a time consuming algorithm like SVM, therefore we try other algorithms
 
+#### K-Nearest Neighbors
+KNN is a lazy learning algorithm, that yield very high prediction accuracy on the testing dataset. This is a very suitable algorithm for our purpose.
 ```python
 trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.2, random_state = 42)
+from sklearn.neighbors import KNeighborsClassifier
 classifier = KNeighborsClassifier(n_neighbors=1)
 classifier.fit(trainX, trainY)
 y_pred = classifier.predict(testX)
 knnacc = classifier.score(testX, testY)
 print(round(knnacc*100, 3),"%", sep="")
 ```
+Although this algorithm yields a very high prediction accuracy, we would try one last algorithm to see if we get higher prediction accuracy
 
+#### Random Forest
+Random Forest is based on Decision trees concepts where a number of Decision Trees are implemented and the best one is used. We have set number of estimators at 100.
 ```python
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=9)
 rf = RandomForestClassifier(n_estimators=100)
@@ -302,6 +318,7 @@ rf.fit(x_train, y_train)
 pred = rf.predict(x_test)
 print(round(rf.score(x_test,y_test) * 100, 3),"%",sep="")
 ```
+Since we are getting 100% prediction accuracy without any overfitting, we decide to use Random Forest further in this project.
 
 ## References
 - [_Baclic, O., Tunis, M., Young, K., Doan, C., Swerdfeger, H., & Schonfeld, J. (2020). Artificial intelligence in public health: Challenges and opportunities for public health made possible by advances in natural language processing. Canada Communicable Disease Report, 46(6), 161._](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/References/Challenges%20and%20opportunities%20for%20public%20health.pdf)
