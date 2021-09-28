@@ -249,6 +249,27 @@ plt.title("Symptom 12")
 ```python
 df1.isna().count()
 ```
+```
+Disease          0
+Symptom_1        0
+Symptom_2        0
+Symptom_3        0
+Symptom_4      348
+Symptom_5     1206
+Symptom_6     1986
+Symptom_7     2652
+Symptom_8     2976
+Symptom_9     3228
+Symptom_10    3408
+Symptom_11    3726
+Symptom_12    4176
+Symptom_13    4416
+Symptom_14    4614
+Symptom_15    4680
+Symptom_16    4728
+Symptom_17    4848
+dtype: int64
+```
 
 2. Due to the large number of null values from Sypmtom_6 onwards, we will not be using the columns from Symptom_6 onwards in our Machine Learning model. We also combine the other csv files into a single dataframe.
 ```python
@@ -281,6 +302,9 @@ lrmodel = lr.fit(x_train, y_train)
 lracc = lr.score(x_test, y_test)
 print(round(lracc*100, 3), "%", sep="")
 ```
+```
+87.719%
+```
 We do not wish to choose Logistic Regression as the preferred ML Algortihm for our model
 
 #### Support Vector Machine
@@ -293,6 +317,9 @@ svmmodel.fit(x_train, y_train)
 y_pred = svmmodel.predict(x_test)
 svmacc = metrics.accuracy_score(y_test, y_pred)
 print(round(svmacc*100, 3), "%", sep="")
+```
+```
+97.697%
 ```
 We do not wish to implement a time consuming algorithm like SVM, therefore we try other algorithms
 
@@ -307,6 +334,9 @@ y_pred = classifier.predict(testX)
 knnacc = classifier.score(testX, testY)
 print(round(knnacc*100, 3),"%", sep="")
 ```
+```
+99.781%
+```
 Although this algorithm yields a very high prediction accuracy, we would try one last algorithm to see if we get higher prediction accuracy
 
 #### Random Forest
@@ -317,6 +347,9 @@ rf = RandomForestClassifier(n_estimators=100)
 rf.fit(x_train, y_train)
 pred = rf.predict(x_test)
 print(round(rf.score(x_test,y_test) * 100, 3),"%",sep="")
+```
+```
+100.0%
 ```
 Since we are getting 100% prediction accuracy without any overfitting, we decide to use Random Forest further in this project.
 
