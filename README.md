@@ -47,6 +47,15 @@ This system aims to help the patients who are confused about the disease they ha
 6. Building a user interface that interacts with the patients in the front end.
 7. Connecting the ML model in the back end to the front end.
 
+## Tools Used
+1. Python Language Libraries:
+  - Pandas
+  - Numpy
+  - Matplotlib
+  - Seaborn
+  - Scikitlearn
+2. HTML/CSS
+
 ## Implementation
 
 ### Dataset
@@ -57,29 +66,183 @@ The dataset that will be used for this project is a publicly available dataset t
 - [Symptom Severity.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom%20Severity.csv): This csv file contains the level of severity of the symptoms that are present in Symptom.csv. The highest (indicating to most critical severity) symptom has been given 7 and the lease (indicating to least critical severity) has been given 1.
 - [Symptom Precaution.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom%20Precaution.csv): This csv file contains 4 columns of simple precautions that can be taken to avoid contracting the list of unique diseases present in Symptom.csv.
 
-### Visualizing the data
-
-Before we get a visualization on the data, we need to read it using pandas library
+### Reading the data
+We read the dataset using Python's pandas library
 ```python
 import pandas as pd
 df1 = pd.read_csv('Symptom.csv')
 df2 = pd.read_csv('Symptom Description.csv')
 df3 = pd.read_csv('Symptom Precaution.csv')
 df4 = pd.read_csv('Symptom Severity.csv')
+df1.head()
 ```
-Once read, we can use Python visualization libraries such as Matplotlib and Seaborn
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Disease</th>
+      <th>Symptom_1</th>
+      <th>Symptom_2</th>
+      <th>Symptom_3</th>
+      <th>Symptom_4</th>
+      <th>Symptom_5</th>
+      <th>Symptom_6</th>
+      <th>Symptom_7</th>
+      <th>Symptom_8</th>
+      <th>Symptom_9</th>
+      <th>Symptom_10</th>
+      <th>Symptom_11</th>
+      <th>Symptom_12</th>
+      <th>Symptom_13</th>
+      <th>Symptom_14</th>
+      <th>Symptom_15</th>
+      <th>Symptom_16</th>
+      <th>Symptom_17</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Fungal infection</td>
+      <td>itching</td>
+      <td>skin_rash</td>
+      <td>nodal_skin_eruptions</td>
+      <td>dischromic_patches</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Fungal infection</td>
+      <td>skin_rash</td>
+      <td>nodal_skin_eruptions</td>
+      <td>dischromic_patches</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Fungal infection</td>
+      <td>itching</td>
+      <td>nodal_skin_eruptions</td>
+      <td>dischromic_patches</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Fungal infection</td>
+      <td>itching</td>
+      <td>skin_rash</td>
+      <td>dischromic_patches</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Fungal infection</td>
+      <td>itching</td>
+      <td>skin_rash</td>
+      <td>nodal_skin_eruptions</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+
+### Data visualization
+Once the csv files are read, we can use Python visualization libraries such as Matplotlib and Seaborn to visualise the data in better, user friendly way.
+1. Importing libraries
 ```python
 import matplotlib.pyplot as plt
 import seaborn as sns
 %matplotlib inline
 sns.set()
 ```
- 
+ 2. Visualising the count of various severity levels of symptoms using a histogram
 ```python
 vis1 = plt.hist(df4["weight"], color=sns.color_palette()[8])
 plt.xlabel("Count")
 plt.ylabel("Severity")
 ```
+<p align="left">
+  <a>
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Severity%20histogram.png" width="350" height="250">
+  </a>
+</p>
+From this figure, we infer that most of the symptoms mentioned in this datset has severity levels 4 and 5
+
+3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a ring plot of 'Symptom_11' column
+```python
+symptom = df1["Symptom_12"].value_counts()
+vis2 = plt.pie(symptom, labels=symptom.index, startangle=100, 
+               counterclock=False, wedgeprops={'width': 0.4})
+plt.title("Symptom 12")
+```
+<p align="left">
+  <a>
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Ring%20plot%20Symptom%2012.png" width="360" height="260">
+  </a>
+</p>
 
 ### Data Preprocessing
 
