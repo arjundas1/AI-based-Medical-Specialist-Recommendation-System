@@ -343,6 +343,7 @@ Although this algorithm yields a very high prediction accuracy, we would try one
 Random Forest is based on Decision trees concepts where a number of Decision Trees are implemented and the best one is used. We have set number of estimators at 100.
 ```python
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=9)
+from sklearn.ensemble import RandomForestClassifier
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(x_train, y_train)
 pred = rf.predict(x_test)
