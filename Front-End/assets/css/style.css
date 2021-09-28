@@ -1,0 +1,174 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 2;
+    color: #272626;
+  }
+
+  .logo{
+      height: 50px;
+      width: 50px;
+      float: left;
+  }
+  .topnav {
+    background-color: #333;
+    overflow: hidden;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #709c09;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #4fd3eb;
+    color: black;
+  }
+  
+  /* Add a color to the active/current link */
+  .topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+  }
+
+  .container {
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    opacity: 90%;
+  }
+
+  .centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: black;
+    font-size: 50px;
+    font-style: italic;
+  }
+
+  .button1{
+    background-color: #709c09; /* Green */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    font-style: normal;
+  }
+
+  
+
+  .welcome{
+    padding: 20px;
+    margin-top: 20px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: larger;
+  }
+  
+ #img_doctor{
+      float: right;
+      max-width: 100%; 
+      height: auto;
+    
+  }
+
+  .text_Welcome{
+    font-size: 24px;
+  }
+
+  .footer{
+    text-align: center;
+  padding: 3px;
+  background-color: #608016a4;
+  color: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 16px;
+
+  }
+
+  .left{
+    float: left;
+    width: 50%;
+    font-size: 16px;
+  }
+
+  .right{
+    float: right;
+    width: 50%;
+    font-size: 16px;
+  }
+
+  .left a{
+    color: black;
+    text-align: center;
+    
+    text-decoration: none;
+  }
+
+  .left a:hover{
+    background-color: #4fd3eb;
+    color: black;
+  }
+
+  .left a:active{
+    background-color: #04AA6D;
+    color: white;
+  }
+  .right a{
+    color: black;
+    text-align: center;
+    
+    text-decoration: none;
+  }
+
+  .right a:hover{
+    background-color: #4fd3eb;
+    color: black;
+  }
+
+  .right a:active{
+    background-color: #04AA6D;
+    color: white;
+  }
+  .bottom{
+    
+      display: block;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+
+  }
+
+  .bottom a{
+    color: black;
+    text-align: center;
+    
+    text-decoration: none;
+  }
+
+  .bottom a:hover{
+    background-color: #4fd3eb;
+    color: black;
+  }
+
+  .bottom a:active{
+    background-color: #04AA6D;
+    color: white;
+  }
