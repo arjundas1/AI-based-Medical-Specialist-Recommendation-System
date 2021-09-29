@@ -295,7 +295,7 @@ from sklearn.model_selection import train_test_split
 #### Logistic Regression
 Although the name has regression in it, Logistic regression is a classification algorithm. We identified the most efficient solver for our dataset to be newton-cg. Since covergence passes at 3000 iterations, the algorithm is slow with not a high prediction accuracy score.
 ```python
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2,random_state=10)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,random_state=10)
 from sklearn.linear_model import LogisticRegression
 lr = LogisticRegression(solver="newton-cg",max_iter=3000)
 lrmodel = lr.fit(x_train, y_train)
@@ -310,7 +310,7 @@ We do not wish to choose Logistic Regression as the preferred ML Algortihm for o
 #### Support Vector Machine
 SVM gives a very high prediction accuracy when implemented. However, this algorithm is very slow. This is possibly because of the eager learning construct of this algorithm, or that finding a suitable hyperplane is time consuming.
 ```python
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=10)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=10)
 from sklearn import svm, metrics
 svmmodel = svm.SVC(kernel="linear", C=2)
 svmmodel.fit(x_train, y_train)
@@ -342,7 +342,7 @@ Although this algorithm yields a very high prediction accuracy, we would try one
 #### Random Forest
 Random Forest is based on Decision trees concepts where a number of Decision Trees are implemented and the best one is used. We have set number of estimators at 100.
 ```python
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=9)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=9)
 from sklearn.ensemble import RandomForestClassifier
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(x_train, y_train)
@@ -357,3 +357,7 @@ Since we are getting 100% prediction accuracy without any overfitting, we decide
 ## References
 - [_Baclic, O., Tunis, M., Young, K., Doan, C., Swerdfeger, H., & Schonfeld, J. (2020). Artificial intelligence in public health: Challenges and opportunities for public health made possible by advances in natural language processing. Canada Communicable Disease Report, 46(6), 161._](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/References/Challenges%20and%20opportunities%20for%20public%20health.pdf)
 - [_Harsh, M., Suhas, D., Manthan, T., Anas, D. (2021). AI Based Healthcare Chatbot System by Using Natural Language. International Journal of Scientific Research and Engineering Development, Volume 4 Issue 2._](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/References/AI%20Based%20Healthcare%20Chatbot%20System%20by%20Using%20Natural%20Language.pdf)
+- Khanna, A., Pandey, B., Vashishta, K., Kalia, K., Pradeepkumar, B., & Das, T. (2015). A study of today’s ai through chatbots and rediscovery of machine intelligence. International Journal of u-and e-Service, Science and Technology, 8(7), 277-284.
+- Palanica, A., Flaschner, P., Thommandram, A., Li, M., & Fossat, Y. (2019). Physicians’ perceptions of chatbots in health care: cross-sectional web-based survey. Journal of medical Internet research, 21(4), e12887.  
+- Battineni, G., Chintalapudi, N., & Amenta, F. (2020, June). AI Chatbot Design during an Epidemic Like the Novel Coronavirus. In Healthcare (Vol. 8, No. 2, p. 154). Multidisciplinary Digital Publishing Institute. 
+- Nadarzynski, T., Miles, O., Cowie, A., & Ridge, D. (2019). Acceptability of artificial intelligence (AI)-led chatbot services in healthcare: A mixed-methods study. Digital health, 5, 2055207619871808. 
