@@ -231,7 +231,7 @@ plt.ylabel("Severity")
 </p>
 From this figure, we infer that most of the symptoms mentioned in this datset has severity levels 4 and 5
 
-3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a ring plot of 'Symptom_11' column
+3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a ring plot of 'Symptom_12' column
 ```python
 symptom = df1["Symptom_12"].value_counts()
 vis2 = plt.pie(symptom, labels=symptom.index, startangle=100, 
