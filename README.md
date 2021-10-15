@@ -48,17 +48,20 @@ This system aims to help the patients who are confused about the disease they ha
 7. Connecting the ML model in the back end to the front end.
 
 ## Tools Used
+
 1. Python Language Libraries:
   - Pandas
   - Numpy
   - Matplotlib
   - Seaborn
   - Scikitlearn
+  - Flask
 2. HTML/CSS
 
 ## Implementation
 
 ### Dataset
+
 The dataset that will be used for this project is a publicly available dataset that was found on Kaggle, a Machine Learning and Data Science Community platform. It is created by Pranay Patil and Pratik Rathod. The dataset can be found in the [Dataset](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/tree/main/Dataset) folder of this respository. It is a very new dataset as it was uploaded in 2019 and updated in 2020. The usability of this dataset is rated very high by Kaggle (9.7/10). There are four csv files in the Dataset folder:
 
 - [Symptom.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom.csv): This is the most important csv file, where the symptoms and their corresponding disease has been mentioned. The dataset consists of 17 columns of symptoms and 1 column for Disease name. The symptom columns (named as Symptom_1 to Symptom_17) has a lot of null values in their cells, indicating to the fact that a disease can have less than 17 symptoms.
@@ -67,6 +70,7 @@ The dataset that will be used for this project is a publicly available dataset t
 - [Symptom Precaution.csv](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Dataset/Symptom%20Precaution.csv): This csv file contains 4 columns of simple precautions that can be taken to avoid contracting the list of unique diseases present in Symptom.csv.
 
 ### Reading the data
+
 We read the dataset using Python's pandas library
 ```python
 import pandas as pd
@@ -210,7 +214,9 @@ df1.head()
 </table>
 
 ### Data visualization
+
 Once the csv files are read, we can use Python visualization libraries such as Matplotlib and Seaborn to visualise the data in better, user friendly way.
+
 1. Importing libraries
 ```python
 import matplotlib.pyplot as plt
@@ -218,11 +224,13 @@ import seaborn as sns
 %matplotlib inline
 sns.set()
 ```
+
  2. Visualising the count of various severity levels of symptoms using a histogram
 ```python
 vis1 = plt.hist(df4["weight"], color=sns.color_palette()[8])
 plt.xlabel("Count")
 plt.ylabel("Severity")
+plt.show()
 ```
 <p align="left">
   <a>
@@ -231,16 +239,32 @@ plt.ylabel("Severity")
 </p>
 From this figure, we infer that most of the symptoms mentioned in this datset has severity levels 4 and 5
 
-3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a ring plot of 'Symptom_12' column
+3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a pie plot of 'Symptom_12' column
 ```python
 symptom = df1["Symptom_12"].value_counts()
-vis2 = plt.pie(symptom, labels=symptom.index, startangle=100, 
-               counterclock=False, wedgeprops={'width': 0.4})
+vis2 = plt.pie(symptom, labels=symptom.index, startangle=100, counterclock=False)
 plt.title("Symptom 12")
+plt.show()
 ```
 <p align="left">
   <a>
-    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Ring%20plot%20Symptom%2012.png" width="360" height="260">
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Pie%20plot%20Symptom%2012.png" width="500" height="300">
+  </a>
+</p>
+The variety of symptoms are highly different in various columns. As we move towards the right columns, the number of null values increase and hence the variety decreases altogether.
+
+4. The difference in the number of symptoms in 'Symptom_14' column as a ring plot against that of 'Symptom_12' shown above
+```python
+col = ['greenyellow', 'orchid', 'burlywood', 'salmon']
+symptom = df1["Symptom_14"].value_counts()
+vis3 = plt.pie(symptom, labels=symptom.index, startangle=90,
+               counterclock=False, wedgeprops={'width': 0.4}, colors=col)
+plt.title("Symptom 14")
+plt.show()
+```
+<p align="left">
+  <a>
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Ring%20plot%20Symptom%2014.png" width="360" height="260">
   </a>
 </p>
 
