@@ -18,7 +18,7 @@ vis2 = plt.pie(symptom, labels=symptom.index, startangle=100, counterclock=False
 plt.title("Symptom 12")
 plt.show()
 
-col = ['hotpink', 'gold', 'aqua', 'chartreuse']
+col = ['greenyellow', 'orchid', 'burlywood', 'salmon']
 symptom = df1["Symptom_14"].value_counts()
 vis3 = plt.pie(symptom, labels=symptom.index, startangle=90,
                counterclock=False, wedgeprops={'width': 0.4}, colors=col)
