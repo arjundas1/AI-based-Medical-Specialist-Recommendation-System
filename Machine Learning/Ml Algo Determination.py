@@ -62,7 +62,6 @@ print(round(rf.score(x_test, y_test) * 100, 3), "%", sep="")
 
 conf_mat = confusion_matrix(y_test, preds)
 df_cm = pd.DataFrame(conf_mat, index=df['Disease'].unique(), columns=df['Disease'].unique())
-print('F1-score% =', f1_score(y_test, preds, average='macro')*100, '|', 'Accuracy% =',
-      accuracy_score(y_test, preds)*100)
+print('F1-score% =', f1_score(y_test, preds, average='macro')*100)
 sns.heatmap(df_cm, cmap="RdPu")
 plt.show()
