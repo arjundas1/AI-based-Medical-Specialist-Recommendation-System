@@ -1,48 +1,68 @@
+import numpy as np
 import pandas as pd
-import sklearn
-from sklearn import svm, metrics
-from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import f1_score, accuracy_score, confusion_matrix
 
-df1 = pd.read_csv('C:/Users/Arjun/Downloads/Dataset/Symptom.csv')
-df2 = pd.read_csv('C:/Users/Arjun/Downloads/Dataset/Symptom Description.csv')
-df3 = pd.read_csv('C:/Users/Arjun/Downloads/Dataset/Symptom Precaution.csv')
-df4 = pd.read_csv('C:/Users/Arjun/Downloads/Dataset/Symptom Severity.csv')
+df = pd.read_csv('Symptom.csv')
+df.drop(['Symptom_6', 'Symptom_7', 'Symptom_8', 'Symptom_9', 'Symptom_10', 'Symptom_11', 'Symptom_12', 'Symptom_13',
+         'Symptom_14', 'Symptom_15', 'Symptom_16', 'Symptom_17'], axis=1, inplace=True)
+cols = df.columns
+data = df[cols].values.flatten()
+s = pd.Series(data)
+s = s.str.strip()
+s = s.values.reshape(df.shape)
+df = pd.DataFrame(s, columns=df.columns)
+df = df.fillna(0)
+vals = df.values
 
-combined_df = pd.merge(df1, df2, on = 'Disease')
-combined_df = pd.merge(combined_df , df3, on = 'Disease')
+df1 = pd.read_csv('Symptom Severity.csv')
+symptoms = df1['Symptom'].unique()
+for i in range(len(symptoms)):
+    vals[vals == symptoms[i]] = df1[df1['Symptom'] == symptoms[i]]['weight'].values[0]
 
-x = combined_df[['Symptom_1', 'Symptom_2', 'Symptom_3','Symptom_4','Symptom_5']]
-le = LabelEncoder()
-for i in x.columns:
-    x[i] = le.fit_transform(x[i].astype(str))
-y = combined_df['Disease']
+d = pd.DataFrame(vals, columns=cols)
+d = d.replace('dischromic _patches', 0)
+d = d.replace('spotting_ urination', 0)
+df = d.replace('foul_smell_of urine', 0)
+data = df.iloc[:, 1:].values
+labels = df['Disease'].values
 
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2,random_state=10)
-lr = LogisticRegression(solver="newton-cg",max_iter=3000)
+x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=10)
+lr = LogisticRegression(solver="newton-cg", max_iter=3000)
 lrmodel = lr.fit(x_train, y_train)
 lracc = lr.score(x_test, y_test)
 print(round(lracc*100, 3), "%", sep="")
 
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=10)
-svmmodel = svm.SVC(kernel="linear", C=2)
-svmmodel.fit(x_train, y_train)
-y_pred = svmmodel.predict(x_test)
-svmacc = metrics.accuracy_score(y_test, y_pred)
-print(round(svmacc*100, 3), "%", sep="")
+x_train, x_test, y_train, y_test = train_test_split(data, labels, shuffle=True, train_size=0.85)
+model = SVC()
+model.fit(x_train, y_train)
+preds = model.predict(x_test)
+acc = metrics.accuracy_score(y_test, preds)
+print(round(acc * 100, 3), "%", sep="")
 
-trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.2, random_state = 42)
+trainX, testX, trainY, testY = train_test_split(data, labels, test_size=0.2, random_state=42)
 classifier = KNeighborsClassifier(n_neighbors=1)
 classifier.fit(trainX, trainY)
 y_pred = classifier.predict(testX)
 knnacc = classifier.score(testX, testY)
-print(round(knnacc*100, 3),"%", sep="")
+print(round(knnacc*100, 3), "%", sep="")
 
-x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size=0.2, random_state=9)
-rf=RandomForestClassifier(n_estimators=100)
+x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.25, random_state=9)
+rf = RandomForestClassifier(n_estimators=100)
 rf.fit(x_train, y_train)
-pred = rf.predict(x_test)
-print(round(rf.score(x_test,y_test) * 100, 3),"%",sep="")
+preds = rf.predict(x_test)
+print(round(rf.score(x_test, y_test) * 100, 3), "%", sep="")
+
+conf_mat = confusion_matrix(y_test, preds)
+df_cm = pd.DataFrame(conf_mat, index=df['Disease'].unique(), columns=df['Disease'].unique())
+print('F1-score% =', f1_score(y_test, preds, average='macro')*100, '|', 'Accuracy% =',
+      accuracy_score(y_test, preds)*100)
+sns.heatmap(df_cm, cmap="RdPu")
+plt.show()
