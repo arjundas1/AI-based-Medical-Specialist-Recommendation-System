@@ -71,14 +71,12 @@ The dataset that will be used for this project is a publicly available dataset t
 
 ### Reading the data
 
-We read the dataset using Python's pandas library
+We read the dataset using Python's pandas library. We only require Symptom.csv and Symptom severity.csv for building the ML Algorithm.
 ```python
 import pandas as pd
-df1 = pd.read_csv('Symptom.csv')
-df2 = pd.read_csv('Symptom Description.csv')
-df3 = pd.read_csv('Symptom Precaution.csv')
-df4 = pd.read_csv('Symptom Severity.csv')
-df1.head()
+df = pd.read_csv('Symptom.csv')
+df1 = pd.read_csv('Symptom Description.csv')
+df.head()
 ```
 <table border="1" class="dataframe">
   <thead>
@@ -221,13 +219,12 @@ Once the csv files are read, we can use Python visualization libraries such as M
 ```python
 import matplotlib.pyplot as plt
 import seaborn as sns
-%matplotlib inline
 sns.set()
 ```
 
  2. Visualising the count of various severity levels of symptoms using a histogram
 ```python
-vis1 = plt.hist(df4["weight"], color=sns.color_palette()[8])
+vis1 = plt.hist(df1["weight"], color=sns.color_palette()[8])
 plt.xlabel("Count")
 plt.ylabel("Severity")
 plt.show()
@@ -241,7 +238,7 @@ From this figure, we infer that most of the symptoms mentioned in this datset ha
 
 3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a pie plot of 'Symptom_12' column
 ```python
-symptom = df1["Symptom_12"].value_counts()
+symptom = df["Symptom_12"].value_counts()
 vis2 = plt.pie(symptom, labels=symptom.index, startangle=100, counterclock=False)
 plt.title("Symptom 12")
 plt.show()
@@ -256,7 +253,7 @@ The variety of symptoms are highly different in various columns. As we move towa
 4. The difference in the number of symptoms in 'Symptom_14' column as a ring plot against that of 'Symptom_12' shown above
 ```python
 col = ['greenyellow', 'orchid', 'burlywood', 'salmon']
-symptom = df1["Symptom_14"].value_counts()
+symptom = df["Symptom_14"].value_counts()
 vis3 = plt.pie(symptom, labels=symptom.index, startangle=90,
                counterclock=False, wedgeprops={'width': 0.4}, colors=col)
 plt.title("Symptom 14")
@@ -271,7 +268,7 @@ plt.show()
 ### Data Preprocessing
 1. From the above head of df1 dataframe, we observe that a lot of Null values are present in the dataset. Therefore we count the total number of NaN values in the dataset.
 ```python
-df1.isna().count()
+df.isna().count()
 ```
 ```
 Disease          0
@@ -295,20 +292,16 @@ Symptom_17    4848
 dtype: int64
 ```
 
-2. Due to the large number of null values from Sypmtom_6 onwards, we will not be using the columns from Symptom_6 onwards in our Machine Learning model. We also combine the other csv files into a single dataframe.
+2. Due to the large number of null values from Sypmtom_6 onwards, we will not be using the columns from Symptom_6 onwards in our Machine Learning model.
 ```python
-combined_df = pd.merge(df1, df2, on = 'Disease')
-combined_df = pd.merge(combined_df , df3, on = 'Disease')
-x = combined_df[['Symptom_1', 'Symptom_2', 'Symptom_3','Symptom_4','Symptom_5']]
+df.drop(['Symptom_6', 'Symptom_7', 'Symptom_8', 'Symptom_9', 'Symptom_10', 'Symptom_11', 'Symptom_12', 'Symptom_13',
+         'Symptom_14', 'Symptom_15', 'Symptom_16', 'Symptom_17'], axis=1, inplace=True)
+
 ```
 
 3. For the machine to understand the column contents, we need to perform label encoding on these columns. We use scikitlearn's Label Encoder function for that. 
 ```python
-from sklearn.preprocessing import LabelEncoder
-le = LabelEncoder()
-for i in x.columns:
-    x[i] = le.fit_transform(x[i].astype(str))
-y = combined_df['Disease']
+
 ```
 
 ### ML Model
@@ -319,22 +312,22 @@ from sklearn.model_selection import train_test_split
 #### Logistic Regression
 Although the name has regression in it, Logistic regression is a classification algorithm. We identified the most efficient solver for our dataset to be newton-cg. Since covergence passes at 3000 iterations, the algorithm is slow with not a high prediction accuracy score.
 ```python
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,random_state=10)
+x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=10)
 from sklearn.linear_model import LogisticRegression
-lr = LogisticRegression(solver="newton-cg",max_iter=3000)
+lr = LogisticRegression(solver="newton-cg", max_iter=3000)
 lrmodel = lr.fit(x_train, y_train)
 lracc = lr.score(x_test, y_test)
 print(round(lracc*100, 3), "%", sep="")
 ```
 ```
-87.719%
+79.167%
 ```
 We do not wish to choose Logistic Regression as the preferred ML Algortihm for our model
 
 #### Support Vector Machine
 SVM gives a very high prediction accuracy when implemented. However, this algorithm is very slow. This is possibly because of the eager learning construct of this algorithm, or that finding a suitable hyperplane is time consuming.
 ```python
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=10)
+x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.15, random_state=10)
 from sklearn import svm, metrics
 svmmodel = svm.SVC(kernel="linear", C=2)
 svmmodel.fit(x_train, y_train)
@@ -343,30 +336,30 @@ svmacc = metrics.accuracy_score(y_test, y_pred)
 print(round(svmacc*100, 3), "%", sep="")
 ```
 ```
-97.697%
+91.057%
 ```
 We do not wish to implement a time consuming algorithm like SVM, therefore we try other algorithms
 
 #### K-Nearest Neighbors
 KNN is a lazy learning algorithm, that yield very high prediction accuracy on the testing dataset. This is a very suitable algorithm for our purpose.
 ```python
-trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.2, random_state = 42)
+trainX, testX, trainY, testY = train_test_split(data, labels, test_size = 0.2, random_state = 42)
 from sklearn.neighbors import KNeighborsClassifier
 classifier = KNeighborsClassifier(n_neighbors=1)
 classifier.fit(trainX, trainY)
 y_pred = classifier.predict(testX)
 knnacc = classifier.score(testX, testY)
-print(round(knnacc*100, 3),"%", sep="")
+print(round(knnacc*100, 3), "%", sep="")
 ```
 ```
-99.781%
+93.801%
 ```
 Although this algorithm yields a very high prediction accuracy, we would try one last algorithm to see if we get higher prediction accuracy
 
 #### Random Forest
 Random Forest is based on Decision trees concepts where a number of Decision Trees are implemented and the best one is used. We have set number of estimators at 100.
 ```python
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=9)
+x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.25, random_state=9)
 from sklearn.ensemble import RandomForestClassifier
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(x_train, y_train)
@@ -374,9 +367,23 @@ pred = rf.predict(x_test)
 print(round(rf.score(x_test,y_test) * 100, 3),"%",sep="")
 ```
 ```
-100.0%
+94.634%
 ```
-Since we are getting 100% prediction accuracy without any overfitting, we decide to use Random Forest further in this project.
+Since we are getting the highest prediction accuracy without any overfitting, we decide to use Random Forest further in this project.
+
+F1 Score and visual representation(Heatmap) of the algorithm:
+```python
+
+```
+<p align="left">
+  <a>
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Heatmap.png" width="500" height="450">
+  </a>
+</p>
+
+### Prediction function
+
+
 
 ## References
 - [_Baclic, O., Tunis, M., Young, K., Doan, C., Swerdfeger, H., & Schonfeld, J. (2020). Artificial intelligence in public health: Challenges and opportunities for public health made possible by advances in natural language processing. Canada Communicable Disease Report, 46(6), 161._](https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/References/Challenges%20and%20opportunities%20for%20public%20health.pdf)
