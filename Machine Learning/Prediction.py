@@ -1,64 +1,89 @@
-import csv
+import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 
-f = open('Symptom.csv')
-arr = list()
-csv_f = csv.reader(f)
-for row in csv_f:
-    arr.append(row[0])
-f.close()
-arr.remove('Disease')
-for i in range(len(arr)):
-    print(arr[i])
+df = pd.read_csv('Symptom.csv')
+df.drop(['Symptom_6', 'Symptom_7', 'Symptom_8', 'Symptom_9', 'Symptom_10', 'Symptom_11', 'Symptom_12', 'Symptom_13',
+         'Symptom_14', 'Symptom_15', 'Symptom_16', 'Symptom_17'], axis=1, inplace=True)
+cols = df.columns
+data = df[cols].values.flatten()
+s = pd.Series(data)
+s = s.str.strip()
+s = s.values.reshape(df.shape)
+df = pd.DataFrame(s, columns=df.columns)
+df = df.fillna(0)
+vals = df.values
 
-medical = list()
-for i in range(len(arr)):
-    if arr[i] == 'Fungal infection' or arr[i] == 'Acne' or arr[i] == 'Psoriasis' or arr[i] == 'Impetigo':
-        medical[i] = 'Dermatologist'
-    elif arr[i] == 'Allergy' or arr[i] == 'Drug Reaction':
-        medical[i] = 'Allergist'
-    elif arr[i] == 'GERD' or arr[i] == 'Peptic ulcer diseae' or arr[i] == 'Gastroenteritis' or arr[i] == 'Jaundice':
-        medical[i] = 'Gastroenterologist'
-    elif arr[i] == 'Chronic cholestasis' or arr[i] == 'hepatitis A' or arr[i] == 'hepatitis B' or \
-            arr[i] == 'hepatitis C' or arr[i] == 'hepatitis D' or arr[i] == 'hepatitis E' or \
-            arr[i] == 'Alcoholic hepatitis':
-        medical[i] = 'Hepatologist'
-    elif arr[i] == 'AIDS' or arr[i] == 'Chicken pox' or arr[i] == 'Common Cold':
-        medical[i] = 'Primary Care Provider'
-    elif arr[i] == 'Diabetes' or arr[i] == 'Hypothyroidism' or arr[i] == 'Hyperthyroidism' or arr[i] == 'Hypoglycemia':
-        medical[i] = 'Endocrinologist'
-    elif arr[i] == 'Bronchial Asthma' or arr[i] == 'Pneumonia':
-        medical[i] = 'Pulmonologist'
-    elif arr[i] == 'Hypertension' or arr[i] == 'Heart attack':
-        medical[i] = 'Cardiologist'
-    elif arr[i] == 'Migraine' or arr[i] == '(vertigo) Paroymsal  Positional Vertigo':
-        medical[i] = 'Neurologist'
-    elif arr[i] == 'Cervical spondylosis' or arr[i] == 'Osteoarthristis' or arr[i] == 'Arthritis':
-        medical[i] = 'Orthopedic'
-    elif arr[i] == 'Paralysis (brain hemorrhage)':
-        medical[i] = 'Neurosurgeon'
-    elif arr[i] == 'Malaria' or arr[i] == 'Dengue' or arr[i] == 'Typhoid' or arr[i] == 'Tuberculosis':
-        medical[i] = 'Infectious Disease Doctor'
-    elif arr[i] == 'Dimorphic hemmorhoids(piles)':
-        medical[i] = 'Proctologist'
-    elif arr[i] == 'Varicose veins':
-        medical[i] = 'Vascular Surgeon'
-    elif arr[i] == 'Urinary tract infection':
-        medical[i] = 'Urologist'
-    
-df1 = pd.read_csv('Symptom.csv')
-df2 = pd.read_csv('Symptom Description.csv')
-df3 = pd.read_csv('Symptom Precaution.csv')
-df4 = pd.read_csv('Symptom Severity.csv')
+df1 = pd.read_csv('Symptom Severity.csv')
+symptoms = df1['Symptom'].unique()
+for i in range(len(symptoms)):
+    vals[vals == symptoms[i]] = df1[df1['Symptom'] == symptoms[i]]['weight'].values[0]
 
-combined_df = pd.merge(df1, df2, on = 'Disease')
-combined_df = pd.merge(combined_df , df3, on = 'Disease')
+d = pd.DataFrame(vals, columns=cols)
+d = d.replace('dischromic _patches', 0)
+d = d.replace('spotting_ urination', 0)
+df = d.replace('foul_smell_of urine', 0)
+data = df.iloc[:, 1:].values
+labels = df['Disease'].values
 
-x = combined_df[['Symptom_1', 'Symptom_2', 'Symptom_3','Symptom_4','Symptom_5']]
-le = LabelEncoder()
-for i in x.columns:
-    x[i] = le.fit_transform(x[i].astype(str))
-y = combined_df['Disease']
+x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.25, random_state=9)
+rf = RandomForestClassifier(n_estimators=100)
+rf.fit(x_train, y_train)
+
+def doctor(prob):
+    if prob == 'Fungal infection' or prob == 'Acne' or prob == 'Psoriasis' or prob == 'Impetigo':
+        return 'Dermatologist'
+    elif prob == 'Allergy' or prob == 'Drug Reaction':
+        return 'Allergist'
+    elif prob == 'GERD' or prob == 'Peptic ulcer diseae' or prob == 'Gastroenteritis' or prob == 'Jaundice':
+        return 'Gastroenterologist'
+    elif prob == 'Chronic cholestasis' or prob == 'hepatitis A' or prob == 'hepatitis B' or \
+            prob == 'hepatitis C' or prob == 'hepatitis D' or prob == 'hepatitis E' or \
+            prob == 'Alcoholic hepatitis':
+        return 'Hepatologist'
+    elif prob == 'AIDS' or prob == 'Chicken pox' or prob == 'Common Cold':
+        return 'Primary Care Provider'
+    elif prob == 'Diabetes' or prob == 'Hypothyroidism' or prob == 'Hyperthyroidism' or prob == 'Hypoglycemia':
+        return 'Endocrinologist'
+    elif prob == 'Bronchial Asthma' or prob == 'Pneumonia':
+        return 'Pulmonologist'
+    elif prob == 'Hypertension' or prob == 'Heart attack':
+        return 'Cardiologist'
+    elif prob == 'Migraine' or prob == '(vertigo) Paroymsal  Positional Vertigo':
+        return 'Neurologist'
+    elif prob == 'Cervical spondylosis' or prob == 'Osteoarthristis' or prob == 'Arthritis':
+        return 'Orthopedic'
+    elif prob == 'Paralysis (brain hemorrhage)':
+        return 'Neurosurgeon'
+    elif prob == 'Malaria' or prob == 'Dengue' or prob == 'Typhoid' or prob == 'Tuberculosis':
+        return 'Infectious Disease Doctor'
+    elif prob == 'Dimorphic hemmorhoids(piles)':
+        return 'Proctologist'
+    elif prob == 'Varicose veins':
+        return 'Vascular Surgeon'
+    elif prob == 'Urinary tract infection':
+        return 'Urologist'
+
+
+def predd(S1, S2, S3, S4, S5):
+    psymptoms = [S1, S2, S3, S4, S5]
+    print(psymptoms)
+    a = np.array(df1["Symptom"])
+    b = np.array(df1["weight"])
+    for j in range(len(psymptoms)):
+        for k in range(len(a)):
+            if psymptoms[j] == a[k]:
+                psymptoms[j] = b[k]
+    psy = [psymptoms]
+    pred2 = rf.predict(psy)
+    print(pred2[0])
+    print(f'You are advised to visit any {doctor(pred2[0])}')
+
+
+sympList = df1["Symptom"].to_list()
+'''
+for i in range(len(sympList)):
+    print(sympList[i])
+'''
+predd(sympList[7], sympList[2], sympList[5], sympList[1], sympList[8])
