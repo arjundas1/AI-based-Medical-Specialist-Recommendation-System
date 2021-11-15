@@ -448,6 +448,7 @@ def doctor(prob):
 
 In order to have a user given prediction, the format of the input must be in-line with the dataframe format, using numpy array. Its prediction must later pass through the doctor() function and give the answer to the user.
 ```python
+import numpy as np
 def predd(S1, S2, S3, S4, S5):
     psymptoms = [S1, S2, S3, S4, S5]
     print(psymptoms)
