@@ -428,44 +428,7 @@ treeviz = tree.plot_tree(rf.estimators_[0],
 </p>
 
 ### Prediction Function
-The prediction given by the algorithm will refer to a disease, and since we wish to recommend the medical specialist without revealing the name, we pass the prediction answer to a function that returns the specialist doctor since every disease in the dataset has been mapped to a particular doctor.
-```python
-def doctor(prob):
-    if prob == 'Fungal infection' or prob == 'Acne' or prob == 'Psoriasis' or prob == 'Impetigo':
-        return 'Dermatologist'
-    elif prob == 'Allergy' or prob == 'Drug Reaction':
-        return 'Allergist'
-    elif prob == 'GERD' or prob == 'Peptic ulcer diseae' or prob == 'Gastroenteritis' or prob == 'Jaundice':
-        return 'Gastroenterologist'
-    elif prob == 'Chronic cholestasis' or prob == 'hepatitis A' or prob == 'hepatitis B' or \
-            prob == 'hepatitis C' or prob == 'hepatitis D' or prob == 'hepatitis E' or \
-            prob == 'Alcoholic hepatitis':
-        return 'Hepatologist'
-    elif prob == 'AIDS' or prob == 'Chicken pox' or prob == 'Common Cold':
-        return 'Primary Care Provider'
-    elif prob == 'Diabetes' or prob == 'Hypothyroidism' or prob == 'Hyperthyroidism' or prob == 'Hypoglycemia':
-        return 'Endocrinologist'
-    elif prob == 'Bronchial Asthma' or prob == 'Pneumonia':
-        return 'Pulmonologist'
-    elif prob == 'Hypertension' or prob == 'Heart attack':
-        return 'Cardiologist'
-    elif prob == 'Migraine' or prob == '(vertigo) Paroymsal  Positional Vertigo':
-        return 'Neurologist'
-    elif prob == 'Cervical spondylosis' or prob == 'Osteoarthristis' or prob == 'Arthritis':
-        return 'Orthopedic'
-    elif prob == 'Paralysis (brain hemorrhage)':
-        return 'Neurosurgeon'
-    elif prob == 'Malaria' or prob == 'Dengue' or prob == 'Typhoid' or prob == 'Tuberculosis':
-        return 'Infectious Disease Doctor'
-    elif prob == 'Dimorphic hemmorhoids(piles)':
-        return 'Proctologist'
-    elif prob == 'Varicose veins':
-        return 'Vascular Surgeon'
-    elif prob == 'Urinary tract infection':
-        return 'Urologist'
-```
-
-In order to have a user given prediction, the format of the input must be in-line with the data frame format, using numpy array. Its prediction must later pass through the doctor() function and give the answer to the user.
+In order to have a user given prediction, the format of the input must be in-line with the data frame format, using numpy array. The function yields the apt disease based on the user inputs.
 ```python
 import numpy as np
 def predd(S1, S2, S3, S4, S5):
@@ -480,7 +443,6 @@ def predd(S1, S2, S3, S4, S5):
     psy = [psymptoms]
     pred2 = rf.predict(psy)
     print(pred2[0])
-    print(f'You are advised to visit any {doctor(pred2[0])}')
 ```
 ### GUI
 This is a temporary graphical user interface for better understanding and visualisation of the front-end. The user is allowed to choose the symptoms from the dropdown menu. This tool takes five symptoms from the user as the input and predicts the specialist to visit, while predicting the possible disease. 
