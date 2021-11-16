@@ -31,6 +31,22 @@ x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.25
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(x_train, y_train)
 
+conf_mat = confusion_matrix(y_test, preds)
+df_cm = pd.DataFrame(conf_mat, index=df['Disease'].unique(), columns=df['Disease'].unique())
+print('F1-score% =', f1_score(y_test, preds, average='macro')*100, '|', 'Accuracy% =',
+      accuracy_score(y_test, preds)*100)
+sns.heatmap(df_cm, cmap="RdPu")
+plt.show()
+
+from sklearn import tree
+fig = plt.figure(figsize=(25, 20))
+treeviz = tree.plot_tree(rf.estimators_[0],
+                         filled=True, impurity=True,
+                         rounded=True,
+                         feature_names=data,
+                         class_names=labels)
+plt.show()
+
 def doctor(prob):
     if prob == 'Fungal infection' or prob == 'Acne' or prob == 'Psoriasis' or prob == 'Impetigo':
         return 'Dermatologist'
