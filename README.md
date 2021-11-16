@@ -402,9 +402,28 @@ print('F1-score% =', f1_score(y_test, preds, average='macro')*100)
 sns.heatmap(df_cm, cmap="RdPu")
 plt.show()
 ```
+```
+F1-score% = 94.10676945338828
+```
 <p align="left">
   <a>
     <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Heatmap.png" width="500" height="450">
+  </a>
+</p>
+
+Visualisation of the kind of decision tree formed:
+```python
+from sklearn import tree
+fig = plt.figure(figsize=(25, 20))
+treeviz = tree.plot_tree(rf.estimators_[0],
+                         filled=True, impurity=True,
+                         rounded=True,
+                         feature_names=data,
+                         class_names=labels)
+```
+<p align="center">
+  <a>
+    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Decision%20Tree.jpeg" width="650" height="500">
   </a>
 </p>
 
@@ -446,7 +465,7 @@ def doctor(prob):
         return 'Urologist'
 ```
 
-In order to have a user given prediction, the format of the input must be in-line with the dataframe format, using numpy array. Its prediction must later pass through the doctor() function and give the answer to the user.
+In order to have a user given prediction, the format of the input must be in-line with the data frame format, using numpy array. Its prediction must later pass through the doctor() function and give the answer to the user.
 ```python
 import numpy as np
 def predd(S1, S2, S3, S4, S5):
