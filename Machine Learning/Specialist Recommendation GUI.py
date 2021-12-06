@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk  # Normal Tkinter.* widgets are not themed!
+from ttkthemes import themed_tk as tk
 
 df = pd.read_csv('Symptom.csv')
 df.drop(['Symptom_6', 'Symptom_7', 'Symptom_8', 'Symptom_9', 'Symptom_10', 'Symptom_11', 'Symptom_12', 'Symptom_13',
@@ -36,10 +38,14 @@ labels = df['Disease'].values
 rf = RandomForestClassifier(n_estimators=100)
 rf = rf.fit(data, labels)
 
-root = Tk()
-root.title("Specialist Recommendation Tool")
-root.configure(bg='#ADD8E6')
+root = tk.ThemedTk()
+root.get_themes()
+root.set_theme("breeze")
 
+bgImage = PhotoImage(file= r"bg1.png")
+Label(root , image = bgImage).place(relwidth= 1, relheight= 1)
+root.title("Specialist Recommendation Tool")
+root.configure()
 
 Symptom1 = StringVar()
 Symptom1.set(None)
@@ -52,31 +58,34 @@ Symptom4.set(None)
 Symptom5 = StringVar()
 Symptom5.set(None)
 
-w2 = Label(root, justify=CENTER, text=" Specialist Recommendation Tool ", bg='#ADD8E6')
-w2.config(font=("Bookman Old Style", 25))
+fgColor = "#ffffff"
+bgColor = "#000000"
+w2 = Label(root, justify=CENTER, text=" Specialist Recommendation Tool", fg=fgColor , bg= bgColor)
+
+w2.config(font=("Harrington", 25))
 w2.grid(row=1, column=0, columnspan=2, padx=100)
 
-NameLb1 = Label(root, text="", bg='#ADD8E6')
+NameLb1 = Label(root, text="")
 NameLb1.config(font=("Bookman Old Style", 20))
 NameLb1.grid(row=5, column=1, pady=10, sticky=W)
 
-S1Lb = Label(root, text="Symptom 1", bg='#ADD8E6')
+S1Lb = Label(root, text="Symptom 1", fg=bgColor)
 S1Lb.config(font=("Bookman Old Style", 15))
 S1Lb.grid(row=7, column=1, pady=10, sticky=W)
 
-S2Lb = Label(root, text="Symptom 2", bg='#ADD8E6')
+S2Lb = Label(root, text="Symptom 2", fg=bgColor)
 S2Lb.config(font=("Bookman Old Style", 15))
 S2Lb.grid(row=8, column=1, pady=10, sticky=W)
 
-S3Lb = Label(root, text="Symptom 3", bg='#ADD8E6')
+S3Lb = Label(root, text="Symptom 3", fg=bgColor)
 S3Lb.config(font=("Bookman Old Style", 15))
 S3Lb.grid(row=9, column=1, pady=10, sticky=W)
 
-S4Lb = Label(root, text="Symptom 4", bg='#ADD8E6')
+S4Lb = Label(root, text="Symptom 4", fg=bgColor)
 S4Lb.config(font=("Bookman Old Style", 15))
 S4Lb.grid(row=10, column=1, pady=10, sticky=W)
 
-S5Lb = Label(root, text="Symptom 5", bg='#ADD8E6')
+S5Lb = Label(root, text="Symptom 5", fg=bgColor)
 S5Lb.config(font=("Bookman Old Style", 15))
 S5Lb.grid(row=11, column=1, pady=10, sticky=W)
 
@@ -107,37 +116,37 @@ def message():
         RF()
 
 
-lr = Button(root, text="Predict", height=2, width=20, command=message)
-lr.config(font=("Bookman Old Style", 15))
+lr = ttk.Button(root, text="Predict", command=message)
+
 lr.grid(row=15, column=1, pady=10)
 
 OPTIONS = df1['Symptom']
 
-S1En = OptionMenu(root, Symptom1, *OPTIONS)
+S1En = ttk.OptionMenu(root, Symptom1, *OPTIONS)
 S1En.grid(row=7, column=1)
 
-S2En = OptionMenu(root, Symptom2, *OPTIONS)
+S2En = ttk.OptionMenu(root, Symptom2, *OPTIONS)
 S2En.grid(row=8, column=1)
 
-S3En = OptionMenu(root, Symptom3, *OPTIONS)
+S3En = ttk.OptionMenu(root, Symptom3, *OPTIONS)
 S3En.grid(row=9, column=1)
 
-S4En = OptionMenu(root, Symptom4, *OPTIONS)
+S4En = ttk.OptionMenu(root, Symptom4, *OPTIONS)
 S4En.grid(row=10, column=1)
 
-S5En = OptionMenu(root, Symptom5, *OPTIONS)
+S5En = ttk.OptionMenu(root, Symptom5, *OPTIONS)
 S5En.grid(row=11, column=1)
 
-NameLb = Label(root, text="", bg='#ADD8E6')
+NameLb = Label(root, text="")
 NameLb.config(font=("Bookman Old Style", 20))
 NameLb.grid(row=13, column=1, pady=10, sticky=W)
 
-NameLb = Label(root, text="", bg='#ADD8E6')
+NameLb = Label(root)
 NameLb.config(font=("Bookman Old Style", 15))
 NameLb.grid(row=17, column=1, pady=10, sticky=W)
 
 t4 = Text(root, height=2, width=20)
 t4.config(font=("Bookman Old Style", 20))
 t4.grid(row=20, column=1, padx=10)
-
 root.mainloop()
+
