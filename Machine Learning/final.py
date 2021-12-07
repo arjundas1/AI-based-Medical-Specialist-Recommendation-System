@@ -37,9 +37,6 @@ labels = df['Disease'].values
 rf = RandomForestClassifier(n_estimators=100)
 rf = rf.fit(data, labels)
 
-LARGE_FONT = ("Verdana", 28)
-
-
 class mainClass(tk.Tk):
 
     def __init__(self, *args, **kwargs):
