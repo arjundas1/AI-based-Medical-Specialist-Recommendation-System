@@ -64,15 +64,25 @@ class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Welcome to the Medical Specialist Recommendation System", bg='LightSteelBlue1')
-        label.config(font=("Bookman Old Style", 25))
+        label = tk.Label(self, text="Welcome to the AI-based Medical Specialist Recommendation System", bg='LightSteelBlue1')
+        label.config(font=("Bookman Old Style", 28))
         label.pack(pady=20, padx=20)
         self.configure(bg='LightSteelBlue1')
-        NameLb = Label(self, text="If you are suffering from a disease and you have no idea which doctor to go to, "
-                                   "then this ML-based system can recommend you the kind of doctor you must visit.",
-                        wraplength=800, bg='LightSteelBlue1')
-        NameLb.config(font=("Bookman Old Style", 14))
+        NameLb = Label(self, text="If you are suffering from a disease and you do not have an idea as to which doctor "
+                                  "to go to, so as to get started with the correct treatment, then this recommendation "
+                                  "system can help you advise the kind of doctor you must visit, based on the symptoms "
+                                  "that your body is showing.", wraplength=1350, bg='LightSteelBlue1')
+        NameLb.config(font=("Bookman Old Style", 16))
         NameLb.pack(pady=20, padx=40)
+
+        NameLb2 = Label(self, text="Steps to get an authentic recommendation:                                          "
+                                   "                 \n1. Click on the 'Get Recommendation' button. You will be "
+                                   "redirected to a new page.\n2.Choose the five most prevalent disease symptoms that "
+                                   "your body is showing.      \n\nPro-tip: Assess yourself thoroughly before entering "
+                                   "the details in order to get the most apt recommendation from our system.",
+                        bg='khaki2')
+        NameLb2.config(font=("Bookman Old Style", 16))
+        NameLb2.pack(pady=40, padx=40)
 
         button = tk.Button(self, text="Get Recommendation", command=lambda: controller.show_frame(PageOne))
         button.config(font=("Bookman Old Style", 18))
@@ -84,7 +94,7 @@ class PageOne(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.configure(bg='RosyBrown2')
-        label = tk.Label(self, text="Enter the five most prevalent symptoms that you are facing",bg='RosyBrown2')
+        label = tk.Label(self, text="Enter the five most prevalent symptoms that you are facing at the moment", bg='RosyBrown2')
         label.config(font=("Bookman Old Style", 20))
         label.pack(pady=2, padx=2)
 
@@ -160,18 +170,27 @@ class PageOne(tk.Frame):
 
         def message():
             count = 0
-            if(Symptom1.get() == "None"):
+            if Symptom1.get() == "None":
                 count += 1
-            if (Symptom2.get() == "None"):
+            if Symptom2.get() == "None":
                 count += 1
-            if (Symptom3.get() == "None"):
+            if Symptom3.get() == "None":
                 count += 1
-            if (Symptom4.get() == "None"):
+            if Symptom4.get() == "None":
                 count += 1
-            if (Symptom5.get() == "None"):
+            if Symptom5.get() == "None":
                 count += 1
-            if(count != 0):
+            if count != 0:
                 messagebox.showinfo("Warning", "Please enter all 5 symptoms")
+            arr = [Symptom1.get(), Symptom2.get(), Symptom3.get(), Symptom4.get(), Symptom5.get()]
+            flag = True
+            for i in range(len(arr)):
+                for j in range(i):
+                    if arr[i] == arr[j]:
+                        flag = False
+                        break
+            if flag != True:
+                messagebox.showinfo("Warning", "Same symptoms cannot be repeated")
             else:
                 RF()
 
