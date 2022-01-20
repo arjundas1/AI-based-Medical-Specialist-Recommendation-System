@@ -49,14 +49,13 @@ This system aims to help the patients who are confused about the disease they ha
 
 ## Tools Used
 
-1. Python Language Libraries:
+Python Language Libraries:
   - Pandas
   - Numpy
   - Matplotlib
   - Seaborn
   - Scikitlearn
-  - Flask
-2. HTML/CSS
+  - Tkinter
 
 ## Implementation
 
@@ -234,7 +233,10 @@ plt.show()
     <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Severity-count%20histogram.png" width="350" height="250">
   </a>
 </p>
-From this figure, we infer that most of the symptoms mentioned in this datset has severity levels 4 and 5
+From this figure, we infer that most of the symptoms mentioned in this datset has severity 
+levels 4 and 5. This helps us realize the kind of symptoms available in the dataset and 
+whether we wish to weigh the in the severity for each symptom during data preprocessing 
+or not.
 
 3. In order to understand the various symptoms that are present in the columns, we can make pie charts of every to see the variety of symptoms present in each column. For easy understanding, we have included a pie plot of 'Symptom_12' column
 ```python
@@ -248,9 +250,11 @@ plt.show()
     <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Pie%20plot%20Symptom%2012.png" width="500" height="300">
   </a>
 </p>
-The variety of symptoms are highly different in various columns. As we move towards the right columns, the number of null values increase and hence the variety decreases altogether.
+The variety of symptoms are highly different in various columns. As we move towards 
+the right columns, the number of null values increase and hence the variety decreases 
+altogether. The difference in the number of symptoms in 'Symptom_14' column as a ring 
+plot against that of 'Symptom_12' shown above.
 
-4. The difference in the number of symptoms in 'Symptom_14' column as a ring plot against that of 'Symptom_12' shown above
 ```python
 col = ['greenyellow', 'orchid', 'burlywood', 'salmon']
 symptom = df["Symptom_14"].value_counts()
@@ -264,6 +268,9 @@ plt.show()
     <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/Ring%20plot%20Symptom%2014.png" width="360" height="260">
   </a>
 </p>
+The 11 variety of symptoms reduced to only 4 in Symptom_14 column. This enables us 
+to decide the number of symptom columns that must be taken for consideration while 
+creating the model. 
 
 ### Data Preprocessing
 1. From the above head of df1 dataframe, we observe that a lot of Null values are present in the dataset. Therefore we count the total number of NaN values in the dataset.
@@ -292,13 +299,18 @@ Symptom_17    4848
 dtype: int64
 ```
 
-2. Due to the large number of null values from Sypmtom_6 onwards, we will not be using the columns from Symptom_6 onwards in our Machine Learning model.
+2. Due to the large number of null values from Sypmtom_6 onwards, we will not be using 
+the columns from Symptom_6 onwards in our Machine Learning model. Therefore, we 
+drop those columns from the data frame that we have created.
 ```python
 df.drop(['Symptom_6', 'Symptom_7', 'Symptom_8', 'Symptom_9', 'Symptom_10', 'Symptom_11', 'Symptom_12', 'Symptom_13',
          'Symptom_14', 'Symptom_15', 'Symptom_16', 'Symptom_17'], axis=1, inplace=True)
 ```
 
-3. The data requires to be cleaned. The column values needs to be flattened to a single dimension and reshaped. Also, the null values need to be addressed and filled up.
+3. The data requires to be cleaned. The column values need to be flattened to a single 
+dimension and reshaped. Also, the null values need to be addressed and filled up with an 
+appropriate value. Here, we fill the null values with 0.
+
 ```python
 cols = df.columns
 data = df[cols].values.flatten()
@@ -310,7 +322,9 @@ df = df.fillna(0)
 vals = df.values
 ```
 
-4. We match the df symptoms and their weights in df1 for building precise models.
+4.  We match the data frame of Symptom.csv and their weights in Symptom Severity.csv for 
+building a precise model. We also manually replace the weights with 0 for those symptoms 
+that are not present in Symptom Severity.csv but are present in Symptom.csv.
 ```python
 symptoms = df1['Symptom'].unique()
 for i in range(len(symptoms)):
@@ -328,11 +342,16 @@ labels = df['Disease'].values
 ```
 
 ### ML Model
-In order to find out the suitable machine learning algorithm, we have implemented several algorithms to determine the one yielding highest prediction accuracy. The conditions for train-test split has also been varied according to our understanding of effiency yield. However, every model uses 20% data as testing set.
+
+To find out the suitable machine learning algorithm, we have implemented several algorithms 
+to determine the one yielding highest prediction accuracy. The conditions for train-test split 
+have also been varied according to our understanding of effiency yield. However, every model 
+uses 20% data as testing set.
 ```python
 from sklearn.model_selection import train_test_split
 ```
 #### Logistic Regression
+
 Although the name has regression in it, Logistic regression is a classification algorithm. We identified the most efficient solver for our dataset to be newton-cg. Since covergence passes at 3000 iterations, the algorithm is slow with not a high prediction accuracy score.
 ```python
 x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=10)
@@ -348,6 +367,7 @@ print(round(lracc*100, 3), "%", sep="")
 We do not wish to choose Logistic Regression as the preferred ML Algortihm for our model
 
 #### Support Vector Machine
+
 SVM gives a very high prediction accuracy when implemented. However, this algorithm is very slow. This is possibly because of the eager learning construct of this algorithm, or that finding a suitable hyperplane is time consuming.
 ```python
 x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.15, shuffle=True)
@@ -364,6 +384,7 @@ print(round(svmacc*100, 3), "%", sep="")
 We do not wish to implement a time consuming algorithm like SVM, therefore we try other algorithms
 
 #### K-Nearest Neighbors
+
 KNN is a lazy learning algorithm, that yield very high prediction accuracy on the testing dataset. This is a very suitable algorithm for our purpose.
 ```python
 trainX, testX, trainY, testY = train_test_split(data, labels, test_size = 0.2, random_state = 42)
@@ -380,6 +401,7 @@ print(round(knnacc*100, 3), "%", sep="")
 Although this algorithm yields a very high prediction accuracy, we would try one last algorithm to see if we get higher prediction accuracy
 
 #### Random Forest
+
 Random Forest is based on Decision trees concepts where a number of Decision Trees are implemented and the best one is used. We have set number of estimators at 100.
 ```python
 x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.25, random_state=9)
@@ -427,143 +449,194 @@ treeviz = tree.plot_tree(rf.estimators_[0],
   </a>
 </p>
 
-### Prediction Function
-In order to have a user given prediction, the format of the input must be in-line with the data frame format, using numpy array. The function yields the apt disease based on the user inputs.
+### User Interface
+
+The patients can get a hint on which specialist to visit based on the symptoms they have 
+provided. The user interface is designed using the tkinter library present in python. Tkinter is 
+a python binding to the Tk GUI toolkit and is python’s de facto standard GUI. 
+
+The user interface created is a Recommendation System, that would take five symptoms in the 
+form of an input and display the specialist to be visited. The GUI created consists of a home 
+page, where the guidance to give the inputs have been mentioned, and a prediction page where 
+inputs are taken and prediction is generated. 
+
+Since, no symptom option can be left blank and the same symptom cannot be repeated in the 
+five required symptoms, users get to see warning message boxes when the recommendation 
+system rules are not abided. 
 ```python
-import numpy as np
-def predd(S1, S2, S3, S4, S5):
-    psymptoms = [S1, S2, S3, S4, S5]
-    print(psymptoms)
-    a = np.array(df1["Symptom"])
-    b = np.array(df1["weight"])
-    for j in range(len(psymptoms)):
-        for k in range(len(a)):
-            if psymptoms[j] == a[k]:
-                psymptoms[j] = b[k]
-    psy = [psymptoms]
-    pred2 = rf.predict(psy)
-    print(pred2[0])
-```
-### GUI
-This is a temporary graphical user interface for better understanding and visualisation of the front-end. The user is allowed to choose the symptoms from the dropdown menu. This tool takes five symptoms from the user as the input and predicts the specialist to visit, while predicting the possible disease. 
-```python
+import tkinter as tk
 from tkinter import *
-from tkinter import messagebox
 
-df2 = pd.read_csv('Disease Specialist.csv')
-specialist = df2['Specialist'].tolist()
-edd = df2['Disease'].tolist()
+class mainClass(tk.Tk):
 
-root = Tk()
-root.title("Specialist Recommendation Tool")
-root.configure(bg='#ADD8E6')
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        self.frames = {}
+        for F in (StartPage, PageOne):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+        self.show_frame(StartPage)
 
-Symptom1 = StringVar()
-Symptom1.set(None)
-Symptom2 = StringVar()
-Symptom2.set(None)
-Symptom3 = StringVar()
-Symptom3.set(None)
-Symptom4 = StringVar()
-Symptom4.set(None)
-Symptom5 = StringVar()
-Symptom5.set(None)
-
-w2 = Label(root, justify=CENTER, text=" Specialist Recommendation Tool ", bg='#ADD8E6')
-w2.config(font=("Bookman Old Style", 25))
-w2.grid(row=1, column=0, columnspan=2, padx=100)
-
-NameLb1 = Label(root, text="", bg='#ADD8E6')
-NameLb1.config(font=("Bookman Old Style", 20))
-NameLb1.grid(row=5, column=1, pady=10, sticky=W)
-
-S1Lb = Label(root, text="Symptom 1", bg='#ADD8E6')
-S1Lb.config(font=("Bookman Old Style", 15))
-S1Lb.grid(row=7, column=1, pady=10, sticky=W)
-
-S2Lb = Label(root, text="Symptom 2", bg='#ADD8E6')
-S2Lb.config(font=("Bookman Old Style", 15))
-S2Lb.grid(row=8, column=1, pady=10, sticky=W)
-
-S3Lb = Label(root, text="Symptom 3", bg='#ADD8E6')
-S3Lb.config(font=("Bookman Old Style", 15))
-S3Lb.grid(row=9, column=1, pady=10, sticky=W)
-
-S4Lb = Label(root, text="Symptom 4", bg='#ADD8E6')
-S4Lb.config(font=("Bookman Old Style", 15))
-S4Lb.grid(row=10, column=1, pady=10, sticky=W)
-
-S5Lb = Label(root, text="Symptom 5", bg='#ADD8E6')
-S5Lb.config(font=("Bookman Old Style", 15))
-S5Lb.grid(row=11, column=1, pady=10, sticky=W)
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
 
 
-def RF():
-    psymptoms = [Symptom1.get(), Symptom2.get(), Symptom3.get(), Symptom4.get(), Symptom5.get()]
-    a = np.array(df1["Symptom"])
-    b = np.array(df1["weight"])
-    for j in range(len(psymptoms)):
-        for k in range(len(a)):
-            if psymptoms[j] == a[k]:
-                psymptoms[j] = b[k]
-    psy = [psymptoms]
-    prob = rf.predict(psy)
-    print(prob[0])
-    spec = prob[0]
-    for l in range(40):
-        if spec == edd[l]:
-            t4.delete("1.0", END)
-            t4.insert(END, specialist[l])
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Welcome to the AI-based Medical Specialist Recommendation System", bg='LightSteelBlue1')
+        label.config(font=("Bookman Old Style", 28))
+        label.pack(pady=20, padx=20)
+        self.configure(bg='LightSteelBlue1')
+        NameLb = Label(self, text="If you are suffering from a disease and you do not have an idea as to which doctor "
+                                  "to go to, so as to get started with the correct treatment, then this recommendation "
+                                  "system can help you advise the kind of doctor you must visit, based on the symptoms "
+                                  "that your body is showing.", wraplength=1350, bg='LightSteelBlue1')
+        NameLb.config(font=("Bookman Old Style", 16))
+        NameLb.pack(pady=20, padx=40)
+
+        NameLb2 = Label(self, text="Steps to get an authentic recommendation:                                          "
+                                   "                 \n1. Click on the 'Get Recommendation' button. You will be "
+                                   "redirected to a new page.\n2.Choose the five most prevalent disease symptoms that "
+                                   "your body is showing.      \n\nPro-tip: Assess yourself thoroughly before entering "
+                                   "the details in order to get the most apt recommendation from our system.",
+                        bg='khaki2')
+        NameLb2.config(font=("Bookman Old Style", 16))
+        NameLb2.pack(pady=40, padx=40)
+
+        button = tk.Button(self, text="Get Recommendation", command=lambda: controller.show_frame(PageOne))
+        button.config(font=("Bookman Old Style", 18))
+        button.pack()
 
 
-def message():
-    if (Symptom1.get() == "None" and Symptom2.get() == "None" and Symptom3.get() == "None" and Symptom4.get() == "None"
-            and Symptom5.get() == "None"):
-        messagebox.showinfo("OPPS!!", "ENTER  SYMPTOMS PLEASE")
-    else:
-        RF()
+class PageOne(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(bg='RosyBrown2')
+        label = tk.Label(self, text="Enter the five most prevalent symptoms that you are facing at the moment", bg='RosyBrown2')
+        label.config(font=("Bookman Old Style", 20))
+        label.pack(pady=2, padx=2)
+
+        Symptom1 = StringVar()
+        Symptom1.set(None)
+        Symptom2 = StringVar()
+        Symptom2.set(None)
+        Symptom3 = StringVar()
+        Symptom3.set(None)
+        Symptom4 = StringVar()
+        Symptom4.set(None)
+        Symptom5 = StringVar()
+        Symptom5.set(None)
+
+        OPTIONS = df1['Symptom']
+
+        S1Lb = Label(self, text="Symptom 1", bg='RosyBrown2')
+        S1Lb.config(font=("Bookman Old Style", 25))
+        S1Lb.pack(padx=5, pady=5)
+
+        S1En = OptionMenu(self, Symptom1, *OPTIONS)
+        S1En.config(font=("Bookman Old Style", 20))
+        S1En.pack(padx=5, pady=5)
+
+        S2Lb = Label(self, text="Symptom 2", bg='RosyBrown2')
+        S2Lb.config(font=("Bookman Old Style", 25))
+        S2Lb.pack(padx=5, pady=5)
+
+        S2En = OptionMenu(self, Symptom2, *OPTIONS)
+        S2En.config(font=("Bookman Old Style", 20))
+        S2En.pack(padx=5, pady=5)
+
+        S3Lb = Label(self, text="Symptom 3", bg='RosyBrown2')
+        S3Lb.config(font=("Bookman Old Style", 25))
+        S3Lb.pack(padx=5, pady=5)
+
+        S3En = OptionMenu(self, Symptom3, *OPTIONS)
+        S3En.config(font=("Bookman Old Style", 20))
+        S3En.pack(padx=5, pady=5)
+
+        S4Lb = Label(self, text="Symptom 4", bg='RosyBrown2')
+        S4Lb.config(font=("Bookman Old Style", 25))
+        S4Lb.pack(padx=5, pady=5)
+
+        S4En = OptionMenu(self, Symptom4, *OPTIONS)
+        S4En.config(font=("Bookman Old Style", 20))
+        S4En.pack(padx=5, pady=5)
+
+        S5Lb = Label(self, text="Symptom 5", bg='RosyBrown2')
+        S5Lb.config(font=("Bookman Old Style", 25))
+        S5Lb.pack(padx=5, pady=5)
+
+        S5En = OptionMenu(self, Symptom5, *OPTIONS)
+        S5En.config(font=("Bookman Old Style", 20))
+        S5En.pack(padx=5, pady=5)
+
+        def RF():
+            psymptoms = [Symptom1.get(), Symptom2.get(), Symptom3.get(), Symptom4.get(), Symptom5.get()]
+            a = np.array(df1["Symptom"])
+            b = np.array(df1["weight"])
+            for j in range(len(psymptoms)):
+                for k in range(len(a)):
+                    if psymptoms[j] == a[k]:
+                        psymptoms[j] = b[k]
+            psy = [psymptoms]
+            prob = rf.predict(psy)
+            print(prob[0])
+            spec = prob[0]
+            for l in range(40):
+                if spec == edd[l]:
+                    t4.delete("1.0", END)
+                    t4.insert(END, f"You are recommended to visit any {specialist[l]}")
+
+        def message():
+            count = 0
+            if Symptom1.get() == "None":
+                count += 1
+            if Symptom2.get() == "None":
+                count += 1
+            if Symptom3.get() == "None":
+                count += 1
+            if Symptom4.get() == "None":
+                count += 1
+            if Symptom5.get() == "None":
+                count += 1
+            if count != 0:
+                messagebox.showinfo("Warning", "Please enter all 5 symptoms")
+            arr = [Symptom1.get(), Symptom2.get(), Symptom3.get(), Symptom4.get(), Symptom5.get()]
+            flag = True
+            for i in range(len(arr)):
+                for j in range(i):
+                    if arr[i] == arr[j]:
+                        flag = False
+                        break
+            if flag != True:
+                messagebox.showinfo("Warning", "Same symptoms cannot be repeated")
+            else:
+                RF()
+
+        lr = Button(self, text="Predict", height=1, width=12, command=message)
+        lr.config(font=("Bookman Old Style", 22))
+        lr.pack(padx=5, pady=5)
+
+        t4 = Text(self, height=2, width=40)
+        t4.config(font=("Bookman Old Style", 20))
+        t4.pack(padx=5, pady=5)
 
 
-lr = Button(root, text="Predict", height=2, width=20, command=message)
-lr.config(font=("Bookman Old Style", 15))
-lr.grid(row=15, column=1, pady=10)
-
-OPTIONS = df1['Symptom']
-
-S1En = OptionMenu(root, Symptom1, *OPTIONS)
-S1En.grid(row=7, column=1)
-
-S2En = OptionMenu(root, Symptom2, *OPTIONS)
-S2En.grid(row=8, column=1)
-
-S3En = OptionMenu(root, Symptom3, *OPTIONS)
-S3En.grid(row=9, column=1)
-
-S4En = OptionMenu(root, Symptom4, *OPTIONS)
-S4En.grid(row=10, column=1)
-
-S5En = OptionMenu(root, Symptom5, *OPTIONS)
-S5En.grid(row=11, column=1)
-
-NameLb = Label(root, text="", bg='#ADD8E6')
-NameLb.config(font=("Bookman Old Style", 20))
-NameLb.grid(row=13, column=1, pady=10, sticky=W)
-
-NameLb = Label(root, text="", bg='#ADD8E6')
-NameLb.config(font=("Bookman Old Style", 15))
-NameLb.grid(row=17, column=1, pady=10, sticky=W)
-
-t4 = Text(root, height=2, width=20)
-t4.config(font=("Bookman Old Style", 20))
-t4.grid(row=20, column=1, padx=10)
-
-root.mainloop()
+app = mainClass()
+app.mainloop()
 ```
-<p align="center">
-  <a>
-    <img src="https://github.com/arjundas1/AI-based-Medical-Specialist-Recommendation-System/blob/main/Files/gui.png" width="650" height="500">
-  </a>
-</p>
+
+![image](https://user-images.githubusercontent.com/72820515/150387908-472c7a8d-9e40-4c88-ba58-8f87a7c44de3.png)
+
+![image](https://user-images.githubusercontent.com/72820515/150388101-3f9401eb-1292-4068-958d-2cdab3b2d3fe.png)
 
 
 ## References
